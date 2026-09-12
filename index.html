@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contains Duplicate — Code War (Offline)</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div id="app">
+
+  <!-- Details screen: no login/password, just identify the student -->
+  <section id="auth-screen" class="screen">
+    <div class="card intro-card">
+      <h1>Contains Duplicate <span class="accent">— Code War Chain</span></h1>
+      <p class="sub">Enter your details to start. Your progress is saved automatically as you submit each stage.</p>
+
+      <div class="field">
+        <label for="authName">Full name</label>
+        <input id="authName" type="text" placeholder="e.g. Jane Doe" autocomplete="name" />
+      </div>
+      <div class="field">
+        <label for="authEmail">Email</label>
+        <input id="authEmail" type="email" placeholder="e.g. jane@example.com" autocomplete="email" />
+      </div>
+      <div class="field">
+        <label for="authCollegeId">College ID</label>
+        <input id="authCollegeId" type="text" placeholder="e.g. 21CS045" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label for="languageSelect">Preferred language</label>
+        <select id="languageSelect">
+          <option value="python">Python</option>
+          <option value="cpp">C++</option>
+          <option value="java">Java</option>
+          <option value="c">C</option>
+        </select>
+      </div>
+      <p id="authError" class="auth-error hidden"></p>
+      <button id="authSubmitBtn" class="primary-btn">Start solving →</button>
+    </div>
+  </section>
+
+  <!-- Stage screen -->
+  <section id="stage-screen" class="screen hidden">
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <h1>Contains Duplicate <span class="accent">— Code War</span></h1>
+        <div class="meta">
+          <span class="badge">⏱ 3s · 💾 256MB</span>
+          <span class="badge" id="candidateBadge"></span>
+          <button id="signOutBtn" class="ghost-btn small">Sign out</button>
+        </div>
+      </div>
+      <div class="progress" id="progress"></div>
+    </header>
+
+    <main class="workspace">
+      <div class="panel problem-panel">
+        <div class="stage-title">
+          <span class="stage-num" id="stageNum"></span>
+          <h2 id="stageTitle"></h2>
+          <span class="stage-complexity" id="stageComplexity"></span>
+        </div>
+        <div class="statement" id="stageStatement"></div>
+
+        <div class="format-grid">
+          <div>
+            <h3>Input Format</h3>
+            <p>Line 1: integer n, the number of elements.<br>Line 2: n space-separated integers, the array nums.</p>
+          </div>
+          <div>
+            <h3>Output Format</h3>
+            <p>A single integer/line, as described by the current stage.</p>
+          </div>
+        </div>
+
+        <h3 class="samples-heading">Sample</h3>
+        <div class="samples">
+          <div class="sample">
+            <div class="sample-label">INPUT</div>
+            <pre id="sampleInput"></pre>
+          </div>
+          <div class="sample">
+            <div class="sample-label">EXPECTED OUTPUT</div>
+            <pre id="sampleOutput"></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel editor-panel">
+        <div class="editor-toolbar">
+          <select id="editorLanguage">
+            <option value="python">Python</option>
+            <option value="cpp">C++</option>
+            <option value="java">Java</option>
+            <option value="c">C</option>
+          </select>
+          <button id="resetBtn" class="ghost-btn" title="Reset to boilerplate">Reset</button>
+          <span class="save-indicator" id="saveIndicator"></span>
+        </div>
+        <textarea id="codeEditor" spellcheck="false"></textarea>
+      </div>
+    </main>
+
+    <footer class="nav">
+      <button id="prevBtn" class="ghost-btn">← Previous</button>
+      <span class="stage-indicator" id="stageIndicator"></span>
+      <button id="nextBtn" class="primary-btn">Submit &amp; Continue →</button>
+    </footer>
+  </section>
+
+  <!-- Summary / export screen -->
+  <section id="summary-screen" class="screen hidden">
+    <div class="card summary-card">
+      <h1>🏆 Chain complete</h1>
+      <p class="sub" id="summaryLine"></p>
+      <div id="summaryList" class="summary-list"></div>
+      <div class="summary-actions">
+        <button id="downloadBtn" class="primary-btn">Download responses (.json)</button>
+        <button id="restartBtn" class="ghost-btn">Start over</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
