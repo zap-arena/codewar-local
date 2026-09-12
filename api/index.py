@@ -25,7 +25,7 @@ from sqlalchemy.orm import Session, declarative_base, relationship, sessionmaker
 # ---------------------------------------------------------------------------
 # Database — a Vercel Postgres/Neon integration injects DATABASE_URL automatically.
 # ---------------------------------------------------------------------------
-DATABASE_URL = os.getenv("DATABASE_URL", "")
+DATABASE_URL = os.getenv("POSTGRES_URL", "")
 
 
 def _normalize(url: str) -> str:
