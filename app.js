@@ -10,15 +10,16 @@
   // own origin is always the right API base. file:// / localhost dev falls back to :8000.
   function detectApiBase() {
     const { origin, protocol, hostname } = window.location;
-    if (protocol === "file:" || !origin || origin === "null") return "http://localhost:8001";
-    if (hostname === "localhost" || hostname === "127.0.0.1") return "http://localhost:8001";
+    if (protocol === "file:" || !origin || origin === "null")
+      return "http://localhost:8001";
+    if (hostname === "localhost" || hostname === "127.0.0.1")
+      return "http://localhost:8001";
     return origin;
   }
 
   const DEFAULT_API_BASE = detectApiBase();
 
   // Only overridden if the deployment sets PUBLIC_API_BASE in Vercel's env vars
-  // (frontend and API on different domains); there is no UI control for this.
   async function resolveApiBase() {
     try {
       const res = await fetch(`${DEFAULT_API_BASE}/api/config`);
@@ -26,7 +27,6 @@
       const data = await res.json();
       return data?.apiBase ? data.apiBase.replace(/\/$/, "") : DEFAULT_API_BASE;
     } catch (e) {
-      // /api/config unreachable — fall back to the auto-detected same-origin base.
       return DEFAULT_API_BASE;
     }
   }
@@ -35,12 +35,15 @@
     apiBase: DEFAULT_API_BASE,
     student: null, // { id, name, email, collegeId, language }
     language: "python",
-    current: 0,
-    submissions: {}, // stageIndex -> { language, code, submittedAt, synced }
-    drafts: {}, // stageIndex -> code (unsubmitted working copy)
+    problemStates: {}, // slug -> { current: 0, submissions: {}, drafts: {} }
   };
 
+  let currentProblemSlug = null;
+  let PROBLEM = null;
+  let STAGES = null;
+
   const authScreen = document.getElementById("auth-screen");
+  const dashboardScreen = document.getElementById("dashboard-screen");
   const stageScreen = document.getElementById("stage-screen");
   const summaryScreen = document.getElementById("summary-screen");
 
@@ -51,15 +54,18 @@
   const authError = document.getElementById("authError");
   const authSubmitBtn = document.getElementById("authSubmitBtn");
 
+  const problemList = document.getElementById("problemList");
+  const dashboardSignOutBtn = document.getElementById("dashboardSignOutBtn");
+
   const candidateBadge = document.getElementById("candidateBadge");
   const signOutBtn = document.getElementById("signOutBtn");
+  const topBarTitle = document.getElementById("topBarTitle");
   const progressEl = document.getElementById("progress");
   const stageNum = document.getElementById("stageNum");
   const stageTitle = document.getElementById("stageTitle");
   const stageComplexity = document.getElementById("stageComplexity");
   const stageStatement = document.getElementById("stageStatement");
-  const sampleInput = document.getElementById("sampleInput");
-  const sampleOutput = document.getElementById("sampleOutput");
+  const samplesContainer = document.getElementById("samplesContainer");
   const editorLanguage = document.getElementById("editorLanguage");
   const codeEditor = document.getElementById("codeEditor");
   const resetBtn = document.getElementById("resetBtn");
@@ -71,7 +77,7 @@
   const summaryLine = document.getElementById("summaryLine");
   const summaryList = document.getElementById("summaryList");
   const downloadBtn = document.getElementById("downloadBtn");
-  const restartBtn = document.getElementById("restartBtn");
+  const backToDashboardBtn = document.getElementById("backToDashboardBtn");
 
   function persist() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
@@ -82,14 +88,27 @@
     if (!raw) return;
     try {
       const parsed = JSON.parse(raw);
-      if (parsed?.student) session = parsed;
+      if (parsed?.student) {
+        session = parsed;
+        if (!session.problemStates) {
+          // migrate old session
+          session.problemStates = {};
+          if (session.submissions) {
+            session.problemStates["contains-duplicate-progressive"] = {
+              current: session.current || 0,
+              submissions: session.submissions || {},
+              drafts: session.drafts || {},
+            };
+          }
+        }
+      }
     } catch (e) {
       /* ignore corrupt storage */
     }
   }
 
   function showScreen(el) {
-    [authScreen, stageScreen, summaryScreen].forEach((s) =>
+    [authScreen, dashboardScreen, stageScreen, summaryScreen].forEach((s) =>
       s.classList.add("hidden"),
     );
     el.classList.remove("hidden");
@@ -142,9 +161,9 @@
       });
       session.student = student;
       session.language = student.language || languageSelect.value;
-      session.current = 0;
+      if (!session.problemStates) session.problemStates = {};
       persist();
-      await enterStages();
+      enterDashboard();
     } catch (err) {
       authError.textContent = err.message || "Something went wrong.";
       authError.classList.remove("hidden");
@@ -154,19 +173,75 @@
     }
   });
 
+  // ---- Dashboard Screen ----
+  function enterDashboard() {
+    showScreen(dashboardScreen);
+    problemList.innerHTML = "";
+
+    PROBLEMS.forEach((p) => {
+      const slug = p.problem.slug;
+      const state = session.problemStates[slug] || {
+        current: 0,
+        submissions: {},
+      };
+      const submittedCount = Object.keys(state.submissions).length;
+      const isComplete = submittedCount === p.stages.length;
+
+      const card = document.createElement("div");
+      card.className =
+        "problem-card" +
+        (isComplete ? " completed" : submittedCount > 0 ? " in-progress" : "");
+      card.style.cursor = "pointer";
+
+      let badgeText = isComplete
+        ? "Completed ✓"
+        : submittedCount + " / " + p.stages.length + " stages";
+
+      card.innerHTML = `
+        <h3>
+          <span>${p.problem.title}</span>
+          <span class="status-badge">${badgeText}</span>
+        </h3>
+        <p>${p.stages.length} progressive stages. Submissions save automatically.</p>
+      `;
+
+      card.addEventListener("click", () => {
+        selectProblem(slug);
+      });
+
+      problemList.appendChild(card);
+    });
+  }
+
+  function selectProblem(slug) {
+    currentProblemSlug = slug;
+    const p = PROBLEMS.find((x) => x.problem.slug === slug);
+    PROBLEM = p.problem;
+    STAGES = p.stages;
+
+    if (!session.problemStates[slug]) {
+      session.problemStates[slug] = { current: 0, submissions: {}, drafts: {} };
+      persist();
+    }
+
+    enterStages();
+  }
+
   async function enterStages() {
+    topBarTitle.innerHTML = `${PROBLEM.title} <span class="accent">— Code War</span>`;
     candidateBadge.textContent = session.student
       ? `${session.student.name} · ${session.student.collegeId || session.student.email}`
       : "";
     buildProgressDots();
 
-    // Pull back any submissions already stored server-side (e.g. resuming on another device).
+    // Pull back any submissions already stored server-side
     try {
       const remote = await apiFetch(
         `/api/submissions?studentId=${encodeURIComponent(session.student.id)}&problemSlug=${encodeURIComponent(PROBLEM.slug)}`,
       );
+      const state = session.problemStates[currentProblemSlug];
       remote.forEach((r) => {
-        session.submissions[r.stage - 1] = {
+        state.submissions[r.stage - 1] = {
           language: r.language,
           code: r.code,
           submittedAt: r.submittedAt,
@@ -174,15 +249,16 @@
         };
       });
     } catch (e) {
-      /* offline or server unreachable — fall back to whatever is local */
+      /* offline or server unreachable */
     }
 
     persist();
-    if (Object.keys(session.submissions).length === STAGES.length) {
+    const state = session.problemStates[currentProblemSlug];
+    if (Object.keys(state.submissions).length === STAGES.length) {
       goToSummary();
     } else {
-      session.current = Math.min(
-        Object.keys(session.submissions).length,
+      state.current = Math.min(
+        Object.keys(state.submissions).length,
         STAGES.length - 1,
       );
       showScreen(stageScreen);
@@ -200,8 +276,9 @@
   }
 
   function dotClass(i) {
-    if (session.submissions[i]) return "dot done";
-    if (i === session.current) return "dot active";
+    const state = session.problemStates[currentProblemSlug];
+    if (state.submissions[i]) return "dot done";
+    if (i === state.current) return "dot active";
     return "dot";
   }
 
@@ -212,21 +289,41 @@
   }
 
   function currentCode(index) {
-    if (session.drafts[index] !== undefined) return session.drafts[index];
-    if (session.submissions[index]) return session.submissions[index].code;
+    const state = session.problemStates[currentProblemSlug];
+    if (state.drafts[index] !== undefined) return state.drafts[index];
+    if (state.submissions[index]) return state.submissions[index].code;
     return BOILERPLATE[session.language] || "";
   }
 
   function renderStage() {
-    const idx = session.current;
+    const state = session.problemStates[currentProblemSlug];
+    const idx = state.current;
     const s = STAGES[idx];
 
     stageNum.textContent = idx + 1;
     stageTitle.textContent = s.title;
     stageComplexity.textContent = `Target: ${s.complexity}`;
     stageStatement.innerHTML = s.statement;
-    sampleInput.textContent = s.input;
-    sampleOutput.textContent = s.output;
+
+    samplesContainer.innerHTML = "";
+    if (s.samples && s.samples.length > 0) {
+      s.samples.forEach((sample, i) => {
+        const pair = document.createElement("div");
+        pair.className = "samples";
+        pair.style.marginBottom = "1rem";
+        pair.innerHTML = `
+          <div class="sample">
+            <div class="sample-label">INPUT ${s.samples.length > 1 ? i + 1 : ""}</div>
+            <pre>${sample.input}</pre>
+          </div>
+          <div class="sample">
+            <div class="sample-label">EXPECTED OUTPUT ${s.samples.length > 1 ? i + 1 : ""}</div>
+            <pre>${sample.output}</pre>
+          </div>
+        `;
+        samplesContainer.appendChild(pair);
+      });
+    }
 
     editorLanguage.value = session.language;
     codeEditor.value = currentCode(idx);
@@ -237,37 +334,40 @@
     nextBtn.textContent =
       idx === STAGES.length - 1 ? "Submit & Finish 🏆" : "Submit & Continue →";
 
-    const sub = session.submissions[idx];
+    const sub = state.submissions[idx];
     saveIndicator.textContent = sub
       ? saveIndicatorText(sub)
       : "Not submitted yet";
   }
 
   function saveIndicatorText(sub) {
-    const status = sub.synced ? "Saved to server" : "Saved locally (retry pending)";
+    const status = sub.synced
+      ? "Saved to server"
+      : "Saved locally (retry pending)";
     return `${status} · ${new Date(sub.submittedAt).toLocaleTimeString()}`;
   }
 
   async function submitCurrentStage() {
-    const idx = session.current;
+    const state = session.problemStates[currentProblemSlug];
+    const idx = state.current;
     const record = {
       language: editorLanguage.value,
       code: codeEditor.value,
       submittedAt: new Date().toISOString(),
       synced: false,
     };
-    session.submissions[idx] = record;
-    delete session.drafts[idx];
+    state.submissions[idx] = record;
+    delete state.drafts[idx];
     persist();
 
     saveIndicator.textContent = "Saved locally";
-    record.synced = false; // We'll just mark it unsynced locally for now
   }
-
 
   function summaryStatusText(sub) {
     if (!sub) return "Not submitted";
-    return sub.synced ? `✓ synced · ${sub.language}` : `⚠ local only · ${sub.language}`;
+    return sub.synced
+      ? `✓ synced · ${sub.language}`
+      : `⚠ local only · ${sub.language}`;
   }
 
   function summaryStatusClass(sub) {
@@ -277,12 +377,15 @@
 
   function goToSummary() {
     showScreen(summaryScreen);
-    const submittedCount = Object.keys(session.submissions).length;
-    const syncedCount = Object.values(session.submissions).filter((s) => s.synced).length;
-    summaryLine.textContent = `${session.student.name} submitted ${submittedCount}/${STAGES.length} stages (${syncedCount} synced to server).`;
+    const state = session.problemStates[currentProblemSlug];
+    const submittedCount = Object.keys(state.submissions).length;
+    const syncedCount = Object.values(state.submissions).filter(
+      (s) => s.synced,
+    ).length;
+    summaryLine.textContent = `${session.student.name} submitted ${submittedCount}/${STAGES.length} stages (${syncedCount} synced to server) for ${PROBLEM.title}.`;
     summaryList.innerHTML = "";
     STAGES.forEach((s, i) => {
-      const sub = session.submissions[i];
+      const sub = state.submissions[i];
       const row = document.createElement("div");
       row.className = "summary-row";
       row.innerHTML = `
@@ -296,21 +399,21 @@
   // ---- Stage screen ----
   editorLanguage.addEventListener("change", () => {
     session.language = editorLanguage.value;
-    // Swap in boilerplate for the new language only if nothing typed yet for this stage
-    const idx = session.current;
-    if (!session.submissions[idx] && !session.drafts[idx]) {
+    const state = session.problemStates[currentProblemSlug];
+    const idx = state.current;
+    if (!state.submissions[idx] && !state.drafts[idx]) {
       codeEditor.value = BOILERPLATE[session.language] || "";
     }
     persist();
   });
 
   codeEditor.addEventListener("input", () => {
-    session.drafts[session.current] = codeEditor.value;
+    const state = session.problemStates[currentProblemSlug];
+    state.drafts[state.current] = codeEditor.value;
     saveIndicator.textContent = "Draft saved locally";
     persist();
   });
 
-  // Basic tab-key support in the textarea
   codeEditor.addEventListener("keydown", (e) => {
     if (e.key === "Tab") {
       e.preventDefault();
@@ -324,14 +427,16 @@
   });
 
   resetBtn.addEventListener("click", () => {
-    if (!confirm("Reset this stage's editor to the starter boilerplate?")) return;
+    if (!confirm("Reset this stage's editor to the starter boilerplate?"))
+      return;
     codeEditor.value = BOILERPLATE[session.language] || "";
     codeEditor.dispatchEvent(new Event("input"));
   });
 
   prevBtn.addEventListener("click", () => {
-    if (session.current > 0) {
-      session.current--;
+    const state = session.problemStates[currentProblemSlug];
+    if (state.current > 0) {
+      state.current--;
       persist();
       renderStage();
     }
@@ -341,8 +446,9 @@
     nextBtn.disabled = true;
     await submitCurrentStage();
     nextBtn.disabled = false;
-    if (session.current < STAGES.length - 1) {
-      session.current++;
+    const state = session.problemStates[currentProblemSlug];
+    if (state.current < STAGES.length - 1) {
+      state.current++;
       persist();
       renderStage();
     } else {
@@ -356,9 +462,7 @@
       apiBase: session.apiBase,
       student: null,
       language: "python",
-      current: 0,
-      submissions: {},
-      drafts: {},
+      problemStates: {},
     };
     authNameInput.value = "";
     authEmailInput.value = "";
@@ -367,9 +471,11 @@
   }
 
   signOutBtn.addEventListener("click", signOut);
+  dashboardSignOutBtn.addEventListener("click", signOut);
 
   // ---- Summary screen ----
   downloadBtn.addEventListener("click", async () => {
+    const state = session.problemStates[currentProblemSlug];
     const payload = {
       student: session.student,
       problem: PROBLEM,
@@ -377,28 +483,30 @@
       stages: STAGES.map((s, i) => ({
         stage: i + 1,
         title: s.title,
-        submission: session.submissions[i] || null,
+        submission: state.submissions[i] || null,
       })),
     };
-    
+
     const originalText = downloadBtn.textContent;
     downloadBtn.textContent = "Saving to Server & Downloading...";
     downloadBtn.disabled = true;
-    
+
     try {
       await apiFetch("/api/submit-bulk", {
         method: "POST",
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       });
       // Mark all as synced visually if it succeeds
-      for (const idx in session.submissions) {
-        session.submissions[idx].synced = true;
+      for (const idx in state.submissions) {
+        state.submissions[idx].synced = true;
       }
       persist();
-      goToSummary(); // Re-render summary with synced status
+      goToSummary();
     } catch (err) {
       console.warn("Bulk submit failed:", err.message);
-      alert("Could not reach the server to save your progress, but your JSON backup will download now.");
+      alert(
+        "Could not reach the server to save your progress, but your JSON backup will download now.",
+      );
     }
 
     downloadBtn.textContent = originalText;
@@ -409,18 +517,20 @@
     });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    const safeName = (session.student?.name || "candidate").replace(/\s+/g, "_");
+    const safeName = (session.student?.name || "candidate").replace(
+      /\\s+/g,
+      "_",
+    );
     a.href = url;
-    a.download = `${safeName}_contains-duplicate-responses.json`;
+    a.download = `${safeName}_${PROBLEM.slug}.json`;
     document.body.appendChild(a);
     a.click();
     a.remove();
     URL.revokeObjectURL(url);
   });
 
-  restartBtn.addEventListener("click", () => {
-    if (!confirm("Sign out and clear this device's local cache?")) return;
-    signOut();
+  backToDashboardBtn.addEventListener("click", () => {
+    enterDashboard();
   });
 
   // ---- Init ----
@@ -434,7 +544,7 @@
       authEmailInput.value = session.student.email || "";
       authCollegeIdInput.value = session.student.collegeId || "";
       languageSelect.value = session.language;
-      enterStages();
+      enterDashboard();
     } else {
       showScreen(authScreen);
     }
@@ -442,5 +552,3 @@
 
   init();
 })();
-
-

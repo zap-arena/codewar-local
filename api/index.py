@@ -243,7 +243,16 @@ def submit_bulk(payload: BulkSubmitRequest, db: Session = Depends(get_db)):
 
     student = db.get(Student, student_id)
     if not student:
-        raise HTTPException(status_code=404, detail="Student not found")
+        # Recreate the student from the payload if missing (e.g. DB was wiped)
+        student = Student(
+            id=student_id,
+            name=payload.student.get("name", "Unknown"),
+            email=payload.student.get("email", "unknown@example.com"),
+            college_id=payload.student.get("collegeId", ""),
+            language=payload.student.get("language", "python")
+        )
+        db.add(student)
+        db.commit()
 
     count = 0
     for stage_data in payload.stages:

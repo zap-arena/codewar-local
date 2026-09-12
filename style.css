@@ -440,3 +440,75 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* ---- Dashboard Problem Cards ---- */
+.problem-card {
+  background: #0f1115;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.problem-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--border);
+  transition: background 0.2s ease;
+}
+
+.problem-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.problem-card:hover::before {
+  background: var(--primary);
+}
+
+.problem-card.completed::before {
+  background: var(--success);
+}
+
+.problem-card h3 {
+  font-size: 15px;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.problem-card .status-badge {
+  font-size: 11px;
+  font-family: monospace;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  background: var(--panel);
+}
+
+.problem-card.completed .status-badge {
+  color: var(--success);
+  border-color: rgba(74, 222, 128, 0.3);
+  background: rgba(74, 222, 128, 0.05);
+}
+
+.problem-card.in-progress .status-badge {
+  color: var(--primary);
+  border-color: rgba(110, 168, 254, 0.3);
+  background: rgba(110, 168, 254, 0.05);
+}
+
+.problem-card p {
+  margin: 8px 0 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
