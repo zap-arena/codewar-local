@@ -200,20 +200,30 @@
         !p.problem.disabled &&
         p.problem.tags &&
         (p.problem.tags.includes("star-pattern") ||
-         p.problem.tags.includes("pattern") ||
-         p.problem.tags.includes("math"))
+          p.problem.tags.includes("pattern") ||
+          p.problem.tags.includes("math")),
     );
 
     const hmPool = hashmaps.length > 0 ? hashmaps : PROBLEMS;
     const hm = hmPool[Math.floor(Math.random() * hmPool.length)];
 
-    let tpPool = twopointers.filter(p => p.problem.slug !== hm.problem.slug);
-    if (tpPool.length === 0) tpPool = PROBLEMS.filter(p => p.problem.slug !== hm.problem.slug);
+    let tpPool = twopointers.filter((p) => p.problem.slug !== hm.problem.slug);
+    if (tpPool.length === 0)
+      tpPool = PROBLEMS.filter((p) => p.problem.slug !== hm.problem.slug);
     if (tpPool.length === 0) tpPool = [hm]; // Fallback in extreme edge case
     const tp = tpPool[Math.floor(Math.random() * tpPool.length)];
 
-    let spPool = starpatterns.filter(p => p.problem.slug !== hm.problem.slug && p.problem.slug !== tp.problem.slug);
-    if (spPool.length === 0) spPool = PROBLEMS.filter(p => p.problem.slug !== hm.problem.slug && p.problem.slug !== tp.problem.slug);
+    let spPool = starpatterns.filter(
+      (p) =>
+        p.problem.slug !== hm.problem.slug &&
+        p.problem.slug !== tp.problem.slug,
+    );
+    if (spPool.length === 0)
+      spPool = PROBLEMS.filter(
+        (p) =>
+          p.problem.slug !== hm.problem.slug &&
+          p.problem.slug !== tp.problem.slug,
+      );
     if (spPool.length === 0) spPool = [hm]; // Fallback
     const sp = spPool[Math.floor(Math.random() * spPool.length)];
 
@@ -222,7 +232,7 @@
       stages: [
         { ...sp.stages[0], title: "Q1 - " + sp.stages[0].title },
         { ...hm.stages[0], title: "Q2 - " + hm.stages[0].title },
-        { ...tp.stages[0], title: "Q3 - " + tp.stages[0].title }
+        { ...tp.stages[0], title: "Q3 - " + tp.stages[0].title },
       ],
     };
   }
@@ -500,8 +510,6 @@
   });
 
   resetBtn.addEventListener("click", () => {
-    if (!confirm("Reset this stage's editor to the starter boilerplate?"))
-      return;
     codeEditor.value = BOILERPLATE[session.language] || "";
     codeEditor.dispatchEvent(new Event("input"));
   });
