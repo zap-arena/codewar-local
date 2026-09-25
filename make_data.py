@@ -15,61 +15,7 @@ const BOILERPLATE = {
 
 """
 
-# Contains duplicate data converted to `samples`
-contains_duplicate = {
-    "problem": {
-      "title": "Contains Duplicate",
-      "slug": "contains-duplicate-progressive",
-    },
-    "stages": [
-      {
-        "title": "Stage 1 \u2014 Contains Duplicate",
-        "complexity": "O(n)",
-        "statement": "Given an array of <code>n</code> integers, print <code>1</code> if any value appears at least twice in the array, otherwise print <code>0</code>.<br><br>This is the warm-up stage of the chain \u2014 a plain existence check.",
-        "samples": [
-          {
-            "input": "5\n1 2 3 4 5",
-            "output": "0"
-          }
-        ]
-      },
-      {
-        "title": "Stage 2 \u2014 Find the Duplicate Index",
-        "complexity": "O(n)",
-        "statement": "Enhancement of Stage 1: instead of just saying whether a duplicate exists, print the <strong>0-based index</strong> of the first element that duplicates a value seen earlier in the array. If no duplicate exists, print <code>-1</code>.<br><br>Your solution must run in <strong>O(n)</strong> time using a hash set/map \u2014 an O(n^2) brute-force comparison of every pair will time out once <code>n</code> grows large.",
-        "samples": [
-          {
-            "input": "5\n1 2 3 2 5",
-            "output": "3"
-          }
-        ]
-      },
-      {
-        "title": "Stage 3 \u2014 Count Distinct Duplicated Values",
-        "complexity": "O(n)",
-        "statement": "Enhancement of Stage 2: print how many <strong>distinct values</strong> appear two or more times in the array (not the total count of repeated elements \u2014 count each duplicated value once).<br><br>Still solvable in <strong>O(n)</strong> with a frequency map.",
-        "samples": [
-          {
-            "input": "6\n1 2 2 3 3 4",
-            "output": "2"
-          }
-        ]
-      },
-      {
-        "title": "Stage 4 \u2014 Most Frequent Value",
-        "complexity": "O(n)",
-        "statement": "Enhancement of Stage 3: print the value that occurs <strong>most often</strong> in the array. If several values tie for the highest frequency, print the <strong>smallest</strong> such value.<br><br>Still <strong>O(n)</strong>: one pass to build a frequency map, one pass to find the best value.",
-        "samples": [
-          {
-            "input": "6\n1 2 2 3 3 4",
-            "output": "2"
-          }
-        ]
-      }
-    ]
-}
-
-problems = dumped + [contains_duplicate]
+problems = dumped
 
 with open("data.js", "w") as f:
     f.write(boilerplate)

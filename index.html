@@ -3,16 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Code War (Offline)</title>
+    <title>25-ai/ml Contest</title>
     <link rel="stylesheet" href="style.css?v=2" />
   </head>
   <body>
+    <!-- Anti-Cheat Lock Screen -->
+    <div id="lock-screen" class="hidden" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white;">
+        <div style="background: #1e1e1e; padding: 40px; border-radius: 12px; text-align: center; border: 2px solid #ef4444; max-width: 400px;">
+            <h2 style="color: #ef4444; margin-top: 0;">Tab Switching Detected!</h2>
+            <p style="margin-bottom: 20px; color: #a1a1aa;">You have left the contest tab. Enter the proctor password to continue.</p>
+            <input type="password" id="unlock-password" placeholder="Password" style="width: 100%; padding: 12px; margin-bottom: 15px; background: #27272a; border: 1px solid #3f3f46; color: white; border-radius: 6px;">
+            <button id="unlock-btn" style="width: 100%; padding: 12px; background: #3b82f6; border: none; color: white; font-weight: bold; border-radius: 6px; cursor: pointer;">Unlock</button>
+            <p id="lock-error" class="hidden" style="color: #ef4444; margin-top: 15px; font-size: 0.9em;">Incorrect password.</p>
+        </div>
+    </div>
     <div id="app">
       <!-- Details screen: no login/password, just identify the student -->
       <section id="auth-screen" class="screen">
         <div class="card intro-card">
           <h1>
-            Welcome to <span class="accent">Code War</span>
+            Welcome to <span class="accent">25-ai/ml Contest</span>
           </h1>
           <p class="sub">
             Enter your details to start. Your progress is saved automatically as
@@ -65,7 +75,7 @@
       <!-- Dashboard screen -->
       <section id="dashboard-screen" class="screen hidden">
         <div class="card intro-card" style="max-width: 600px">
-          <h1>Select a Problem <span class="accent">— Code War</span></h1>
+          <h1>Select a Problem <span class="accent">— 25-ai/ml Contest</span></h1>
           <p class="sub">
             Choose a problem chain to begin. You can return here after
             completing a chain.
@@ -96,7 +106,7 @@
       <section id="stage-screen" class="screen hidden">
         <header class="top-bar">
           <div class="top-bar-left">
-            <h1 id="topBarTitle">Code War</h1>
+            <h1 id="topBarTitle">25-ai/ml Contest</h1>
             <div class="meta">
               <span class="badge">⏱ 3s · 💾 256MB</span>
               <span class="badge" id="candidateBadge"></span>

@@ -162,6 +162,7 @@
       session.student = student;
       session.language = student.language || languageSelect.value;
       if (!session.problemStates) session.problemStates = {};
+      assignContest();
       persist();
       enterDashboard();
     } catch (err) {
@@ -173,49 +174,73 @@
     }
   });
 
+  function assignContest() {
+    if (session.assignedContest) return;
+    const hashmaps = PROBLEMS.filter(p => p.problem.tags && (p.problem.tags.includes("hash-map") || p.problem.tags.includes("hash-table") || p.problem.slug === "two-sum" || p.problem.slug === "group-anagrams"));
+    const twopointers = PROBLEMS.filter(p => p.problem.tags && (p.problem.tags.includes("two-pointers") || p.problem.slug === "valid-palindrome" || p.problem.slug === "merge-sorted-array" || p.problem.slug === "reverse-string" || p.problem.slug === "trapping-rain-water"));
+    
+    const hm = hashmaps.length > 0 ? hashmaps[Math.floor(Math.random() * hashmaps.length)] : PROBLEMS[0];
+    const tp = twopointers.length > 0 ? twopointers[Math.floor(Math.random() * twopointers.length)] : PROBLEMS[1 % PROBLEMS.length];
+    
+    session.assignedContest = {
+        problem: { title: "25-ai/ml Contest", slug: "25-ai-ml-contest" },
+        stages: [ 
+            { ...hm.stages[0], title: "Q1 - " + hm.stages[0].title },
+            { ...tp.stages[0], title: "Q2 - " + tp.stages[0].title }
+        ]
+    };
+  }
+
   // ---- Dashboard Screen ----
   function enterDashboard() {
+    try {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
+    } catch (e) {}
+
     showScreen(dashboardScreen);
     problemList.innerHTML = "";
 
-    PROBLEMS.forEach((p) => {
-      const slug = p.problem.slug;
-      const state = session.problemStates[slug] || {
-        current: 0,
-        submissions: {},
-      };
-      const submittedCount = Object.keys(state.submissions).length;
-      const isComplete = submittedCount === p.stages.length;
+    const p = session.assignedContest;
+    if (!p) return;
+    
+    const slug = p.problem.slug;
+    const state = session.problemStates[slug] || {
+      current: 0,
+      submissions: {},
+    };
+    const submittedCount = Object.keys(state.submissions).length;
+    const isComplete = submittedCount === p.stages.length;
 
-      const card = document.createElement("div");
-      card.className =
-        "problem-card" +
-        (isComplete ? " completed" : submittedCount > 0 ? " in-progress" : "");
-      card.style.cursor = "pointer";
+    const card = document.createElement("div");
+    card.className =
+      "problem-card" +
+      (isComplete ? " completed" : submittedCount > 0 ? " in-progress" : "");
+    card.style.cursor = "pointer";
 
-      let badgeText = isComplete
-        ? "Completed ✓"
-        : submittedCount + " / " + p.stages.length + " stages";
+    let badgeText = isComplete
+      ? "Completed ✓"
+      : submittedCount + " / " + p.stages.length + " completed";
 
-      card.innerHTML = `
-        <h3>
-          <span>${p.problem.title}</span>
-          <span class="status-badge">${badgeText}</span>
-        </h3>
-        <p>${p.stages.length} progressive stages. Submissions save automatically.</p>
-      `;
+    card.innerHTML = `
+      <h3>
+        <span>${p.problem.title}</span>
+        <span class="status-badge">${badgeText}</span>
+      </h3>
+      <p>Contains 1 Hashmap question and 1 Two Pointers question. Only one submission is allowed per question.</p>
+    `;
 
-      card.addEventListener("click", () => {
-        selectProblem(slug);
-      });
-
-      problemList.appendChild(card);
+    card.addEventListener("click", () => {
+      selectProblem(slug);
     });
+
+    problemList.appendChild(card);
   }
 
   function selectProblem(slug) {
     currentProblemSlug = slug;
-    const p = PROBLEMS.find((x) => x.problem.slug === slug);
+    const p = session.assignedContest;
     PROBLEM = p.problem;
     STAGES = p.stages;
 
@@ -338,6 +363,17 @@
     saveIndicator.textContent = sub
       ? saveIndicatorText(sub)
       : "Not submitted yet";
+      
+    if (sub) {
+      codeEditor.disabled = true;
+      codeEditor.style.opacity = "0.7";
+      nextBtn.textContent = idx === STAGES.length - 1 ? "End Contest 🏆" : "Already Submitted →";
+      resetBtn.disabled = true;
+    } else {
+      codeEditor.disabled = false;
+      codeEditor.style.opacity = "1";
+      resetBtn.disabled = false;
+    }
   }
 
   function saveIndicatorText(sub) {
@@ -444,9 +480,12 @@
 
   nextBtn.addEventListener("click", async () => {
     nextBtn.disabled = true;
-    await submitCurrentStage();
-    nextBtn.disabled = false;
     const state = session.problemStates[currentProblemSlug];
+    if (!state.submissions[state.current]) {
+      await submitCurrentStage();
+    }
+    nextBtn.disabled = false;
+    
     if (state.current < STAGES.length - 1) {
       state.current++;
       persist();
@@ -544,11 +583,82 @@
       authEmailInput.value = session.student.email || "";
       authCollegeIdInput.value = session.student.collegeId || "";
       languageSelect.value = session.language;
+      assignContest();
+      persist();
       enterDashboard();
     } else {
       showScreen(authScreen);
     }
   }
 
+  // --- Anti-Cheat Tab Switching Logic ---
+  const lockScreen = document.getElementById("lock-screen");
+  const unlockBtn = document.getElementById("unlock-btn");
+  const unlockPassword = document.getElementById("unlock-password");
+  const lockError = document.getElementById("lock-error");
+  const PROCTOR_PASSWORD = "admin"; // Hardcoded password
+
+  function checkLockState() {
+    if (localStorage.getItem("tab_locked") === "true") {
+      lockScreen.classList.remove("hidden");
+    }
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+      localStorage.setItem("tab_locked", "true");
+      lockScreen.classList.remove("hidden");
+    }
+  });
+
+  unlockBtn.addEventListener("click", () => {
+    if (unlockPassword.value === PROCTOR_PASSWORD) {
+      localStorage.removeItem("tab_locked");
+      lockScreen.classList.add("hidden");
+      unlockPassword.value = "";
+      lockError.classList.add("hidden");
+    } else {
+      lockError.classList.remove("hidden");
+    }
+  });
+
+  // --- Strict Proctoring Controls ---
+  
+  // 1. Block Context Menu (Right Click / Inspect)
+  document.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+  });
+
+  // 2. Block Copy, Cut, Paste globally
+  document.addEventListener("copy", (e) => { e.preventDefault(); });
+  document.addEventListener("cut", (e) => { e.preventDefault(); });
+  document.addEventListener("paste", (e) => { e.preventDefault(); });
+
+  // 3. Block Keyboard Shortcuts (F12, Ctrl+Shift+I/J/C)
+  document.addEventListener("keydown", (e) => {
+    // F12
+    if (e.key === "F12") {
+      e.preventDefault();
+    }
+    // Ctrl+Shift+I, J, C or Cmd+Option+I, J, C
+    if ((e.ctrlKey || e.metaKey) && (e.shiftKey || e.altKey)) {
+      if (e.key === "I" || e.key === "i" || 
+          e.key === "J" || e.key === "j" || 
+          e.key === "C" || e.key === "c") {
+        e.preventDefault();
+      }
+    }
+  });
+
+  // 4. Force Fullscreen enforcement (if they exit fullscreen, trigger lock)
+  document.addEventListener("fullscreenchange", () => {
+    if (!document.fullscreenElement && session.student) {
+      // They exited full screen
+      localStorage.setItem("tab_locked", "true");
+      lockScreen.classList.remove("hidden");
+    }
+  });
+
   init();
+  checkLockState();
 })();

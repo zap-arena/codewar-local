@@ -10,232 +10,251 @@ const BOILERPLATE = {
 const PROBLEMS = [
   {
     "problem": {
-      "title": "Grid Traversal (Code War Chain)",
-      "slug": "grid-traversal-progressive"
+      "title": "Two Sum",
+      "slug": "two-sum",
+      "tags": [
+        "array",
+        "hash-map"
+      ]
     },
     "stages": [
       {
-        "title": "Stage 1 - Number of Islands",
-        "complexity": "O(r*c)",
-        "statement": "Count the total number of connected islands.",
+        "title": "Two Sum",
+        "complexity": "Easy",
+        "statement": "<strong>Scenario: E-commerce Platform</strong><br>You are building a checkout system. A user has a gift card with a specific `target` balance. Find exactly two items in their cart (`nums`) whose prices add up to the gift card value so they can spend it entirely.<br><br><strong>Input:</strong> Line 1: integer n, the number of elements.\nLine 2: n space-separated integers, the array nums.\nLine 3: integer target.<br><br><strong>Output:</strong> Two space-separated indices i and j (i < j) such that nums[i] + nums[j] == target.<br><br><strong>Constraints:</strong> 2 <= n <= 10^4\n-10^9 <= nums[i] <= 10^9\n-10^9 <= target <= 10^9\nExactly one valid answer exists.",
         "samples": [
           {
-            "input": "4 5\n11110\n11010\n11000\n00000",
-            "output": "1"
+            "input": "4\n2 7 11 15\n9",
+            "output": "0 1"
           },
           {
-            "input": "3 3\n010\n000\n010",
-            "output": "2"
+            "input": "3\n3 2 4\n6",
+            "output": "1 2"
           }
         ]
-      },
+      }
+    ]
+  },
+  {
+    "problem": {
+      "title": "Group Anagrams",
+      "slug": "group-anagrams",
+      "tags": [
+        "string",
+        "hash-map",
+        "sorting"
+      ]
+    },
+    "stages": [
       {
-        "title": "Stage 2 - Max Area of Island",
-        "complexity": "O(r*c)",
-        "statement": "Find the maximum area of a single island.",
+        "title": "Group Anagrams",
+        "complexity": "Medium",
+        "statement": "<strong>Scenario: Search Engine Optimization</strong><br>Users often scramble letters when searching. Group a list of search query words into clusters of anagrams so the search engine can treat them as the same query.<br><br><strong>Input:</strong> Line 1: integer n, the number of words.\nNext n lines: one lowercase word per line.<br><br><strong>Output:</strong> One group per line. Within a group the words are sorted lexicographically and separated by single spaces; groups are printed in ascending order of their first word.<br><br><strong>Constraints:</strong> 1 <= n <= 10^4\n1 <= |word| <= 100\nEvery word consists of lowercase English letters.",
         "samples": [
           {
-            "input": "4 5\n11110\n11010\n11000\n00000",
+            "input": "6\neat\ntea\ntan\nate\nnat\nbat",
+            "output": "ate eat tea\nbat\nnat tan"
+          },
+          {
+            "input": "1\na",
+            "output": "a"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "problem": {
+      "title": "Top K Frequent Elements",
+      "slug": "top-k-frequent-elements",
+      "tags": [
+        "heap",
+        "hash-map",
+        "sorting",
+        "bucket-sort"
+      ]
+    },
+    "stages": [
+      {
+        "title": "Top K Frequent Elements",
+        "complexity": "Medium",
+        "statement": "<strong>Scenario: Social Media Trending</strong><br>You are analyzing a stream of hashtags. Given an array of hashtag IDs, find the `k` most frequently used hashtags to display on the trending page.<br><br><strong>Input:</strong> Line 1: integer n, the number of elements.\nLine 2: n space-separated integers, the array nums.\nLine 3: integer k.<br><br><strong>Output:</strong> k space-separated integers: the k most frequent values, ordered by descending frequency and, on ties, by ascending value.<br><br><strong>Constraints:</strong> 1 <= n <= 10^5\n-10^4 <= nums[i] <= 10^4\n1 <= k <= number of distinct values in nums",
+        "samples": [
+          {
+            "input": "6\n1 1 1 2 2 3\n2",
+            "output": "1 2"
+          },
+          {
+            "input": "1\n1\n1",
+            "output": "1"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "problem": {
+      "title": "Valid Parentheses",
+      "slug": "valid-parentheses",
+      "tags": [
+        "stack",
+        "string",
+        "hash-map"
+      ]
+    },
+    "stages": [
+      {
+        "title": "Valid Parentheses",
+        "complexity": "Easy",
+        "statement": "<strong>Scenario: Code Compiler</strong><br>You are writing a syntax checker for a new programming language. Given a string of brackets, determine if every opened bracket is correctly closed in the right order.<br><br><strong>Input:</strong> Line 1: the string s, containing only the characters '(', ')', '{', '}', '[' and ']'.<br><br><strong>Output:</strong> Print `true` if s is a valid bracket sequence, otherwise `false`.<br><br><strong>Constraints:</strong> 1 <= |s| <= 10^4\ns consists only of the characters '()[]{}'.",
+        "samples": [
+          {
+            "input": "()[]{}",
+            "output": "true"
+          },
+          {
+            "input": "([)]",
+            "output": "false"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "problem": {
+      "title": "Valid Palindrome",
+      "slug": "valid-palindrome",
+      "tags": [
+        "string",
+        "two-pointers"
+      ]
+    },
+    "stages": [
+      {
+        "title": "Valid Palindrome",
+        "complexity": "Easy",
+        "statement": "<strong>Scenario: DNA Sequence Validation</strong><br>A bioinformatics tool needs to check if a DNA sequence string (ignoring spaces and non-alphanumeric characters) reads the same forwards and backwards.<br><br><strong>Input:</strong> Line 1: the string s, which may contain spaces, punctuation and mixed case.<br><br><strong>Output:</strong> Print `true` if s is a palindrome after removing non-alphanumeric characters and lowercasing, otherwise `false`.<br><br><strong>Constraints:</strong> 1 <= |s| <= 2 * 10^5\ns consists of printable ASCII characters.<br><br><strong>Optimization Scenarios (Two Pointers):</strong><ul><li>Try to solve this using strictly O(1) auxiliary space (in-place).</li><li>Optimize your approach to run in a single pass (O(N) time complexity) without nested loops.</li></ul>",
+        "samples": [
+          {
+            "input": "A man, a plan, a canal: Panama",
+            "output": "true"
+          },
+          {
+            "input": "race a car",
+            "output": "false"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "problem": {
+      "title": "Merge Sorted Array",
+      "slug": "merge-sorted-array",
+      "tags": [
+        "array",
+        "two-pointers",
+        "sorting"
+      ]
+    },
+    "stages": [
+      {
+        "title": "Merge Sorted Array",
+        "complexity": "Easy",
+        "statement": "<strong>Scenario: Database Shard Merging</strong><br>Two distributed database shards have returned sorted lists of user IDs. Merge them in-place into a single sorted list for the frontend.<br><br><strong>Input:</strong> Line 1: integer m.\nLine 2: m space-separated integers, sorted ascending (may be empty).\nLine 3: integer n.\nLine 4: n space-separated integers, sorted ascending (may be empty).<br><br><strong>Output:</strong> m + n space-separated integers: the merged array in ascending order.<br><br><strong>Constraints:</strong> 0 <= m, n <= 10^5\n1 <= m + n\n-10^9 <= values <= 10^9\nBoth input arrays are already sorted ascending.<br><br><strong>Optimization Scenarios (Two Pointers):</strong><ul><li>Try to solve this using strictly O(1) auxiliary space (in-place).</li><li>Optimize your approach to run in a single pass (O(N) time complexity) without nested loops.</li></ul>",
+        "samples": [
+          {
+            "input": "3\n1 2 3\n3\n2 5 6",
+            "output": "1 2 2 3 5 6"
+          },
+          {
+            "input": "1\n1\n0\n",
+            "output": "1"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "problem": {
+      "title": "Reverse String",
+      "slug": "reverse-string",
+      "tags": [
+        "string",
+        "two-pointers"
+      ]
+    },
+    "stages": [
+      {
+        "title": "Reverse String",
+        "complexity": "Easy",
+        "statement": "<strong>Scenario: Embedded Systems Memory</strong><br>You are programming a micro-controller with extremely limited RAM. Reverse a string buffer in-place without allocating any extra memory.<br><br><strong>Input:</strong> A single line containing the string s (no leading or trailing spaces).<br><br><strong>Output:</strong> A single line containing s reversed.<br><br><strong>Constraints:</strong> 1 <= |s| <= 10^5\ns consists of printable ASCII characters excluding newline.<br><br><strong>Optimization Scenarios (Two Pointers):</strong><ul><li>Try to solve this using strictly O(1) auxiliary space (in-place).</li><li>Optimize your approach to run in a single pass (O(N) time complexity) without nested loops.</li></ul>",
+        "samples": [
+          {
+            "input": "hello",
+            "output": "olleh"
+          },
+          {
+            "input": "CodeArena",
+            "output": "anerAedoC"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "problem": {
+      "title": "Longest Substring Without Repeating Characters",
+      "slug": "longest-substring-without-repeating-characters",
+      "tags": [
+        "string",
+        "sliding-window",
+        "hash-map",
+        "two-pointers"
+      ]
+    },
+    "stages": [
+      {
+        "title": "Longest Substring Without Repeating Characters",
+        "complexity": "Medium",
+        "statement": "<strong>Scenario: Network Packet Analysis</strong><br>You are analyzing a stream of network packets. Find the length of the longest contiguous sequence of packets where no two packets have the same ID.<br><br><strong>Input:</strong> Line 1: the string s (may be empty).<br><br><strong>Output:</strong> A single integer: the length of the longest substring without repeating characters.<br><br><strong>Constraints:</strong> 0 <= |s| <= 5 * 10^4\ns consists of printable ASCII characters without spaces.<br><br><strong>Optimization Scenarios (Two Pointers):</strong><ul><li>Try to solve this using strictly O(1) auxiliary space (in-place).</li><li>Optimize your approach to run in a single pass (O(N) time complexity) without nested loops.</li></ul>",
+        "samples": [
+          {
+            "input": "abcabcbb",
+            "output": "3"
+          },
+          {
+            "input": "bbbbb",
+            "output": "1"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "problem": {
+      "title": "Trapping Rain Water",
+      "slug": "trapping-rain-water",
+      "tags": [
+        "array",
+        "two-pointers",
+        "stack",
+        "dynamic-programming"
+      ]
+    },
+    "stages": [
+      {
+        "title": "Trapping Rain Water",
+        "complexity": "Hard",
+        "statement": "<strong>Scenario: Civil Engineering</strong><br>You are designing a city's drainage system. Given an elevation map representing the heights of buildings, calculate how much rainwater can be trapped between them after a storm.<br><br><strong>Input:</strong> Line 1: integer n, the number of bars.\nLine 2: n space-separated non-negative integers, the bar heights.<br><br><strong>Output:</strong> A single integer: the total units of trapped water.<br><br><strong>Constraints:</strong> 1 <= n <= 2 * 10^4\n0 <= height[i] <= 10^5<br><br><strong>Optimization Scenarios (Two Pointers):</strong><ul><li>Try to solve this using strictly O(1) auxiliary space (in-place).</li><li>Optimize your approach to run in a single pass (O(N) time complexity) without nested loops.</li></ul>",
+        "samples": [
+          {
+            "input": "12\n0 1 0 2 1 0 1 3 2 1 2 1",
+            "output": "6"
+          },
+          {
+            "input": "6\n4 2 0 3 2 5",
             "output": "9"
-          },
-          {
-            "input": "3 3\n010\n000\n010",
-            "output": "1"
-          }
-        ]
-      },
-      {
-        "title": "Stage 3 - Island Perimeter",
-        "complexity": "O(r*c)",
-        "statement": "Calculate the total perimeter of all land masses.",
-        "samples": [
-          {
-            "input": "4 5\n11110\n11010\n11000\n00000",
-            "output": "16"
-          },
-          {
-            "input": "3 3\n010\n000\n010",
-            "output": "8"
-          }
-        ]
-      },
-      {
-        "title": "Stage 4 - Closed Islands",
-        "complexity": "O(r*c)",
-        "statement": "Count the number of islands completely surrounded by water (not touching the border).",
-        "samples": [
-          {
-            "input": "4 5\n11110\n11010\n11000\n00000",
-            "output": "0"
-          },
-          {
-            "input": "3 3\n010\n000\n010",
-            "output": "0"
-          }
-        ]
-      },
-      {
-        "title": "Stage 5 - Shortest Bridge",
-        "complexity": "O(r*c)",
-        "statement": "Given exactly two distinct islands, find the minimum number of 0s you must flip to connect them.",
-        "samples": [
-          {
-            "input": "4 5\n11110\n11010\n11000\n00000",
-            "output": "0"
-          },
-          {
-            "input": "3 3\n010\n000\n010",
-            "output": "1"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "problem": {
-      "title": "Best Time to Buy and Sell Stock (Code War Chain)",
-      "slug": "buy-sell-stock-progressive"
-    },
-    "stages": [
-      {
-        "title": "Stage 1 - Single Transaction",
-        "complexity": "O(n)",
-        "statement": "Find the maximum profit you can achieve with **exactly one** transaction (buy once and sell once). Ignore `F` and `K`.",
-        "samples": [
-          {
-            "input": "6\n7 1 5 3 6 4\n2\n2",
-            "output": "5"
-          },
-          {
-            "input": "5\n1 2 3 4 5\n1\n1",
-            "output": "4"
-          }
-        ]
-      },
-      {
-        "title": "Stage 2 - Infinite Transactions",
-        "complexity": "O(n)",
-        "statement": "Find the maximum profit you can achieve with **unlimited** transactions (buy and sell as many times as you want, but you must sell before you buy again). Ignore `F` and `K`.",
-        "samples": [
-          {
-            "input": "6\n7 1 5 3 6 4\n2\n2",
-            "output": "7"
-          },
-          {
-            "input": "5\n1 2 3 4 5\n1\n1",
-            "output": "4"
-          }
-        ]
-      },
-      {
-        "title": "Stage 3 - Transaction Fee",
-        "complexity": "O(n)",
-        "statement": "Find the maximum profit with **unlimited** transactions, but you must pay a transaction fee `F` for every completed trade (buy + sell). Ignore `K`.",
-        "samples": [
-          {
-            "input": "6\n7 1 5 3 6 4\n2\n2",
-            "output": "3"
-          },
-          {
-            "input": "5\n1 2 3 4 5\n1\n1",
-            "output": "3"
-          }
-        ]
-      },
-      {
-        "title": "Stage 4 - Cooldown Period",
-        "complexity": "O(n)",
-        "statement": "Find the maximum profit with **unlimited** transactions, but after you sell your stock, you cannot buy stock on the next day (i.e., a 1-day cooldown period). Ignore `F` and `K`.",
-        "samples": [
-          {
-            "input": "6\n7 1 5 3 6 4\n2\n2",
-            "output": "5"
-          },
-          {
-            "input": "5\n1 2 3 4 5\n1\n1",
-            "output": "4"
-          }
-        ]
-      },
-      {
-        "title": "Stage 5 - At Most 2 Transactions",
-        "complexity": "O(n)",
-        "statement": "Find the maximum profit you can achieve with **at most two** transactions. Ignore `F` and `K`.",
-        "samples": [
-          {
-            "input": "6\n7 1 5 3 6 4\n2\n2",
-            "output": "7"
-          },
-          {
-            "input": "5\n1 2 3 4 5\n1\n1",
-            "output": "4"
-          }
-        ]
-      },
-      {
-        "title": "Stage 6 - At Most K Transactions",
-        "complexity": "O(n * min(n, K))",
-        "statement": "Find the maximum profit you can achieve with **at most K** transactions. Ignore `F`.",
-        "samples": [
-          {
-            "input": "6\n7 1 5 3 6 4\n2\n2",
-            "output": "7"
-          },
-          {
-            "input": "5\n1 2 3 4 5\n1\n1",
-            "output": "4"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "problem": {
-      "title": "Contains Duplicate",
-      "slug": "contains-duplicate-progressive"
-    },
-    "stages": [
-      {
-        "title": "Stage 1 \u2014 Contains Duplicate",
-        "complexity": "O(n)",
-        "statement": "Given an array of <code>n</code> integers, print <code>1</code> if any value appears at least twice in the array, otherwise print <code>0</code>.<br><br>This is the warm-up stage of the chain \u2014 a plain existence check.",
-        "samples": [
-          {
-            "input": "5\n1 2 3 4 5",
-            "output": "0"
-          }
-        ]
-      },
-      {
-        "title": "Stage 2 \u2014 Find the Duplicate Index",
-        "complexity": "O(n)",
-        "statement": "Enhancement of Stage 1: instead of just saying whether a duplicate exists, print the <strong>0-based index</strong> of the first element that duplicates a value seen earlier in the array. If no duplicate exists, print <code>-1</code>.<br><br>Your solution must run in <strong>O(n)</strong> time using a hash set/map \u2014 an O(n^2) brute-force comparison of every pair will time out once <code>n</code> grows large.",
-        "samples": [
-          {
-            "input": "5\n1 2 3 2 5",
-            "output": "3"
-          }
-        ]
-      },
-      {
-        "title": "Stage 3 \u2014 Count Distinct Duplicated Values",
-        "complexity": "O(n)",
-        "statement": "Enhancement of Stage 2: print how many <strong>distinct values</strong> appear two or more times in the array (not the total count of repeated elements \u2014 count each duplicated value once).<br><br>Still solvable in <strong>O(n)</strong> with a frequency map.",
-        "samples": [
-          {
-            "input": "6\n1 2 2 3 3 4",
-            "output": "2"
-          }
-        ]
-      },
-      {
-        "title": "Stage 4 \u2014 Most Frequent Value",
-        "complexity": "O(n)",
-        "statement": "Enhancement of Stage 3: print the value that occurs <strong>most often</strong> in the array. If several values tie for the highest frequency, print the <strong>smallest</strong> such value.<br><br>Still <strong>O(n)</strong>: one pass to build a frequency map, one pass to find the best value.",
-        "samples": [
-          {
-            "input": "6\n1 2 2 3 3 4",
-            "output": "2"
           }
         ]
       }
