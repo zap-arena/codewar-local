@@ -176,18 +176,39 @@
 
   function assignContest() {
     if (session.assignedContest) return;
-    const hashmaps = PROBLEMS.filter(p => p.problem.tags && (p.problem.tags.includes("hash-map") || p.problem.tags.includes("hash-table") || p.problem.slug === "two-sum" || p.problem.slug === "group-anagrams"));
-    const twopointers = PROBLEMS.filter(p => p.problem.tags && (p.problem.tags.includes("two-pointers") || p.problem.slug === "valid-palindrome" || p.problem.slug === "merge-sorted-array" || p.problem.slug === "reverse-string" || p.problem.slug === "trapping-rain-water"));
-    
-    const hm = hashmaps.length > 0 ? hashmaps[Math.floor(Math.random() * hashmaps.length)] : PROBLEMS[0];
-    const tp = twopointers.length > 0 ? twopointers[Math.floor(Math.random() * twopointers.length)] : PROBLEMS[1 % PROBLEMS.length];
-    
+    const hashmaps = PROBLEMS.filter(
+      (p) =>
+        p.problem.tags &&
+        (p.problem.tags.includes("hash-map") ||
+          p.problem.tags.includes("hash-table") ||
+          p.problem.slug === "two-sum" ||
+          p.problem.slug === "group-anagrams"),
+    );
+    const twopointers = PROBLEMS.filter(
+      (p) =>
+        p.problem.tags &&
+        (p.problem.tags.includes("two-pointers") ||
+          p.problem.slug === "valid-palindrome" ||
+          p.problem.slug === "merge-sorted-array" ||
+          p.problem.slug === "reverse-string" ||
+          p.problem.slug === "trapping-rain-water"),
+    );
+
+    const hm =
+      hashmaps.length > 0
+        ? hashmaps[Math.floor(Math.random() * hashmaps.length)]
+        : PROBLEMS[0];
+    const tp =
+      twopointers.length > 0
+        ? twopointers[Math.floor(Math.random() * twopointers.length)]
+        : PROBLEMS[1 % PROBLEMS.length];
+
     session.assignedContest = {
-        problem: { title: "25-ai/ml Contest", slug: "25-ai-ml-contest" },
-        stages: [ 
-            { ...hm.stages[0], title: "Q1 - " + hm.stages[0].title },
-            { ...tp.stages[0], title: "Q2 - " + tp.stages[0].title }
-        ]
+      problem: { title: "25-ai/ml Contest", slug: "25-ai-ml-contest" },
+      stages: [
+        { ...hm.stages[0], title: "Q1 - " + hm.stages[0].title },
+        { ...tp.stages[0], title: "Q2 - " + tp.stages[0].title },
+      ],
     };
   }
 
@@ -204,7 +225,7 @@
 
     const p = session.assignedContest;
     if (!p) return;
-    
+
     const slug = p.problem.slug;
     const state = session.problemStates[slug] || {
       current: 0,
@@ -363,11 +384,12 @@
     saveIndicator.textContent = sub
       ? saveIndicatorText(sub)
       : "Not submitted yet";
-      
+
     if (sub) {
       codeEditor.disabled = true;
       codeEditor.style.opacity = "0.7";
-      nextBtn.textContent = idx === STAGES.length - 1 ? "End Contest 🏆" : "Already Submitted →";
+      nextBtn.textContent =
+        idx === STAGES.length - 1 ? "End Contest 🏆" : "Already Submitted →";
       resetBtn.disabled = true;
     } else {
       codeEditor.disabled = false;
@@ -485,7 +507,7 @@
       await submitCurrentStage();
     }
     nextBtn.disabled = false;
-    
+
     if (state.current < STAGES.length - 1) {
       state.current++;
       persist();
@@ -596,7 +618,7 @@
   const unlockBtn = document.getElementById("unlock-btn");
   const unlockPassword = document.getElementById("unlock-password");
   const lockError = document.getElementById("lock-error");
-  const PROCTOR_PASSWORD = "admin"; // Hardcoded password
+  const PROCTOR_PASSWORD = "zapadmin"; // Hardcoded password
 
   function checkLockState() {
     if (localStorage.getItem("tab_locked") === "true") {
@@ -623,16 +645,22 @@
   });
 
   // --- Strict Proctoring Controls ---
-  
+
   // 1. Block Context Menu (Right Click / Inspect)
   document.addEventListener("contextmenu", (e) => {
     e.preventDefault();
   });
 
   // 2. Block Copy, Cut, Paste globally
-  document.addEventListener("copy", (e) => { e.preventDefault(); });
-  document.addEventListener("cut", (e) => { e.preventDefault(); });
-  document.addEventListener("paste", (e) => { e.preventDefault(); });
+  document.addEventListener("copy", (e) => {
+    e.preventDefault();
+  });
+  document.addEventListener("cut", (e) => {
+    e.preventDefault();
+  });
+  document.addEventListener("paste", (e) => {
+    e.preventDefault();
+  });
 
   // 3. Block Keyboard Shortcuts (F12, Ctrl+Shift+I/J/C)
   document.addEventListener("keydown", (e) => {
@@ -642,9 +670,14 @@
     }
     // Ctrl+Shift+I, J, C or Cmd+Option+I, J, C
     if ((e.ctrlKey || e.metaKey) && (e.shiftKey || e.altKey)) {
-      if (e.key === "I" || e.key === "i" || 
-          e.key === "J" || e.key === "j" || 
-          e.key === "C" || e.key === "c") {
+      if (
+        e.key === "I" ||
+        e.key === "i" ||
+        e.key === "J" ||
+        e.key === "j" ||
+        e.key === "C" ||
+        e.key === "c"
+      ) {
         e.preventDefault();
       }
     }
