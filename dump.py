@@ -16,7 +16,13 @@ SCENARIOS = {
     "trapping-rain-water": "<strong>Scenario: Civil Engineering</strong><br>You are designing a city's drainage system. Given an elevation map representing the heights of buildings, calculate how much rainwater can be trapped between them after a storm.",
     "move-zeroes": "<strong>Scenario: Disk Defragmentation</strong><br>A storage disk represents empty blocks as 0. Shift all valid data to the front of the disk to create one contiguous block of free space at the end.",
     "remove-element": "<strong>Scenario: Content Moderation</strong><br>A cache block contains an array of user IDs. You must filter out all users who match a flagged ID in-place to save memory.",
-    "two-sum-ii": "<strong>Scenario: Ledger Reconciliation</strong><br>You have a chronologically sorted array of transaction amounts. Find two transactions that exactly offset a known discrepancy target."
+    "two-sum-ii": "<strong>Scenario: Ledger Reconciliation</strong><br>You have a chronologically sorted array of transaction amounts. Find two transactions that exactly offset a known discrepancy target.",
+    "hollow-diamond-pattern": "<strong>Scenario: Game UI Rendering</strong><br>You are rendering a retro game interface. Generate a hollow diamond shape using stars and spaces to display an item slot.",
+    "butterfly-pattern": "<strong>Scenario: ASCII Art Generator</strong><br>You are creating an ASCII art generation library. Generate a symmetric butterfly pattern of the specified size.",
+    "pascals-triangle": "<strong>Scenario: Combinatorics Engine</strong><br>You are writing a math engine. Generate Pascal's triangle to easily compute binomial coefficients for a probability simulator.",
+    "floyds-triangle": "<strong>Scenario: Data Packing</strong><br>You are organizing a triangular array of sequential IDs for a data structure. Generate Floyd's triangle.",
+    "number-pyramid": "<strong>Scenario: Display Board</strong><br>Generate a centered number pyramid for a digital scoreboard.",
+    "fibonacci-number": "<strong>Scenario: Nature Growth Simulator</strong><br>You are modeling population growth using the Fibonacci sequence. Calculate the Nth number in the sequence."
 }
 
 def dump_problem(path):
@@ -31,6 +37,10 @@ def dump_problem(path):
         if "hash-map" not in tags: tags.append("hash-map")
     if slug in ["valid-palindrome", "merge-sorted-array", "reverse-string", "longest-substring-without-repeating-characters", "trapping-rain-water", "move-zeroes", "remove-element", "two-sum-ii"]:
         if "two-pointers" not in tags: tags.append("two-pointers")
+    if slug in ["hollow-diamond-pattern", "butterfly-pattern", "floyds-triangle", "number-pyramid"]:
+        if "pattern" not in tags: tags.append("pattern")
+    if slug in ["pascals-triangle", "fibonacci-number"]:
+        if "math" not in tags: tags.append("math")
         
     is_two_pointer = "two-pointers" in tags
     opt_text = "<br><br><strong>Optimization Scenarios (Two Pointers):</strong><ul><li>Try to solve this using strictly O(1) auxiliary space (in-place).</li><li>Optimize your approach to run in a single pass (O(N) time complexity) without nested loops.</li></ul>"
@@ -50,9 +60,11 @@ def dump_problem(path):
     if is_two_pointer:
         stmt += opt_text
         
+    difficulty = problem.get("difficulty", "Medium")
+    
     stages_data = [{
         "title": problem["title"],
-        "complexity": problem.get("difficulty", "Medium"),
+        "complexity": difficulty,
         "statement": stmt,
         "samples": samples
     }]
@@ -61,7 +73,8 @@ def dump_problem(path):
         "problem": {
             "title": problem["title"],
             "slug": slug,
-            "tags": tags
+            "tags": tags,
+            "disabled": difficulty == "Hard" or (is_two_pointer and difficulty == "Medium")
         },
         "stages": stages_data
     }
@@ -85,5 +98,17 @@ move_zeroes = dump_problem("/Users/vuelancer/Downloads/zap-problem-bank/problems
 remove_elem = dump_problem("/Users/vuelancer/Downloads/zap-problem-bank/problems/remove-element")
 two_sum_ii = dump_problem("/Users/vuelancer/Downloads/zap-problem-bank/problems/two-sum-ii")
 
+# Star Patterns & Math
+hollow_diamond = dump_problem("/Users/vuelancer/Downloads/zap-problem-bank/problems/hollow-diamond-pattern")
+butterfly = dump_problem("/Users/vuelancer/Downloads/zap-problem-bank/problems/butterfly-pattern")
+pascals_triangle = dump_problem("/Users/vuelancer/Downloads/zap-problem-bank/problems/pascals-triangle")
+floyds_triangle = dump_problem("/Users/vuelancer/Downloads/zap-problem-bank/problems/floyds-triangle")
+number_pyramid = dump_problem("/Users/vuelancer/Downloads/zap-problem-bank/problems/number-pyramid")
+fibonacci_number = dump_problem("/Users/vuelancer/Downloads/zap-problem-bank/problems/fibonacci-number")
+
 with open("/Users/vuelancer/Downloads/codewar-offline/dump.json", "w") as f:
-    json.dump([two_sum, group_anagrams, top_k, valid_paren, majority_elem, contains_dup_ii, intersection, palindrome, merge_sorted, reverse_string, longest_sub, trapping_rain, move_zeroes, remove_elem, two_sum_ii], f, indent=2)
+    json.dump([
+        two_sum, group_anagrams, top_k, valid_paren, majority_elem, contains_dup_ii, intersection, 
+        palindrome, merge_sorted, reverse_string, longest_sub, trapping_rain, move_zeroes, remove_elem, two_sum_ii,
+        hollow_diamond, butterfly, pascals_triangle, floyds_triangle, number_pyramid, fibonacci_number
+    ], f, indent=2)

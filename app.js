@@ -178,6 +178,7 @@
     if (session.assignedContest) return;
     const hashmaps = PROBLEMS.filter(
       (p) =>
+        !p.problem.disabled &&
         p.problem.tags &&
         (p.problem.tags.includes("hash-map") ||
           p.problem.tags.includes("hash-table") ||
@@ -186,6 +187,7 @@
     );
     const twopointers = PROBLEMS.filter(
       (p) =>
+        !p.problem.disabled &&
         p.problem.tags &&
         (p.problem.tags.includes("two-pointers") ||
           p.problem.slug === "valid-palindrome" ||
@@ -193,21 +195,34 @@
           p.problem.slug === "reverse-string" ||
           p.problem.slug === "trapping-rain-water"),
     );
+    const starpatterns = PROBLEMS.filter(
+      (p) =>
+        !p.problem.disabled &&
+        p.problem.tags &&
+        (p.problem.tags.includes("star-pattern") ||
+         p.problem.tags.includes("pattern") ||
+         p.problem.tags.includes("math"))
+    );
 
-    const hm =
-      hashmaps.length > 0
-        ? hashmaps[Math.floor(Math.random() * hashmaps.length)]
-        : PROBLEMS[0];
-    const tp =
-      twopointers.length > 0
-        ? twopointers[Math.floor(Math.random() * twopointers.length)]
-        : PROBLEMS[1 % PROBLEMS.length];
+    const hmPool = hashmaps.length > 0 ? hashmaps : PROBLEMS;
+    const hm = hmPool[Math.floor(Math.random() * hmPool.length)];
+
+    let tpPool = twopointers.filter(p => p.problem.slug !== hm.problem.slug);
+    if (tpPool.length === 0) tpPool = PROBLEMS.filter(p => p.problem.slug !== hm.problem.slug);
+    if (tpPool.length === 0) tpPool = [hm]; // Fallback in extreme edge case
+    const tp = tpPool[Math.floor(Math.random() * tpPool.length)];
+
+    let spPool = starpatterns.filter(p => p.problem.slug !== hm.problem.slug && p.problem.slug !== tp.problem.slug);
+    if (spPool.length === 0) spPool = PROBLEMS.filter(p => p.problem.slug !== hm.problem.slug && p.problem.slug !== tp.problem.slug);
+    if (spPool.length === 0) spPool = [hm]; // Fallback
+    const sp = spPool[Math.floor(Math.random() * spPool.length)];
 
     session.assignedContest = {
-      problem: { title: "25-ai/ml Contest", slug: "25-ai-ml-contest" },
+      problem: { title: "25-cse Contest", slug: "25-cse-contest" },
       stages: [
-        { ...hm.stages[0], title: "Q1 - " + hm.stages[0].title },
-        { ...tp.stages[0], title: "Q2 - " + tp.stages[0].title },
+        { ...sp.stages[0], title: "Q1 - " + sp.stages[0].title },
+        { ...hm.stages[0], title: "Q2 - " + hm.stages[0].title },
+        { ...tp.stages[0], title: "Q3 - " + tp.stages[0].title }
       ],
     };
   }
@@ -249,7 +264,7 @@
         <span>${p.problem.title}</span>
         <span class="status-badge">${badgeText}</span>
       </h3>
-      <p>Contains 1 Hashmap question and 1 Two Pointers question. Only one submission is allowed per question.</p>
+      <p>Contains 1 Pattern/Math, 1 Hashmap, and 1 Two Pointers question. Only one submission is allowed per question.</p>
     `;
 
     card.addEventListener("click", () => {

@@ -15,7 +15,8 @@ const PROBLEMS = [
       "tags": [
         "array",
         "hash-map"
-      ]
+      ],
+      "disabled": false
     },
     "stages": [
       {
@@ -43,7 +44,8 @@ const PROBLEMS = [
         "string",
         "hash-map",
         "sorting"
-      ]
+      ],
+      "disabled": false
     },
     "stages": [
       {
@@ -72,7 +74,8 @@ const PROBLEMS = [
         "hash-map",
         "sorting",
         "bucket-sort"
-      ]
+      ],
+      "disabled": false
     },
     "stages": [
       {
@@ -100,7 +103,8 @@ const PROBLEMS = [
         "stack",
         "string",
         "hash-map"
-      ]
+      ],
+      "disabled": false
     },
     "stages": [
       {
@@ -126,7 +130,8 @@ const PROBLEMS = [
       "slug": "majority-element",
       "tags": [
         "hash-map"
-      ]
+      ],
+      "disabled": false
     },
     "stages": [
       {
@@ -152,7 +157,8 @@ const PROBLEMS = [
       "slug": "contains-duplicate-ii",
       "tags": [
         "hash-map"
-      ]
+      ],
+      "disabled": false
     },
     "stages": [
       {
@@ -178,7 +184,8 @@ const PROBLEMS = [
       "slug": "intersection-of-two-arrays",
       "tags": [
         "hash-map"
-      ]
+      ],
+      "disabled": false
     },
     "stages": [
       {
@@ -205,7 +212,8 @@ const PROBLEMS = [
       "tags": [
         "string",
         "two-pointers"
-      ]
+      ],
+      "disabled": false
     },
     "stages": [
       {
@@ -233,7 +241,8 @@ const PROBLEMS = [
         "array",
         "two-pointers",
         "sorting"
-      ]
+      ],
+      "disabled": false
     },
     "stages": [
       {
@@ -260,7 +269,8 @@ const PROBLEMS = [
       "tags": [
         "string",
         "two-pointers"
-      ]
+      ],
+      "disabled": false
     },
     "stages": [
       {
@@ -289,7 +299,8 @@ const PROBLEMS = [
         "sliding-window",
         "hash-map",
         "two-pointers"
-      ]
+      ],
+      "disabled": true
     },
     "stages": [
       {
@@ -318,7 +329,8 @@ const PROBLEMS = [
         "two-pointers",
         "stack",
         "dynamic-programming"
-      ]
+      ],
+      "disabled": true
     },
     "stages": [
       {
@@ -344,7 +356,8 @@ const PROBLEMS = [
       "slug": "move-zeroes",
       "tags": [
         "two-pointers"
-      ]
+      ],
+      "disabled": false
     },
     "stages": [
       {
@@ -370,7 +383,8 @@ const PROBLEMS = [
       "slug": "remove-element",
       "tags": [
         "two-pointers"
-      ]
+      ],
+      "disabled": false
     },
     "stages": [
       {
@@ -396,7 +410,8 @@ const PROBLEMS = [
       "slug": "two-sum-ii",
       "tags": [
         "two-pointers"
-      ]
+      ],
+      "disabled": true
     },
     "stages": [
       {
@@ -411,6 +426,155 @@ const PROBLEMS = [
           {
             "input": "3\n2 3 4\n6",
             "output": "1 3"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "problem": {
+      "title": "Hollow Diamond Pattern",
+      "slug": "hollow-diamond-pattern",
+      "tags": [
+        "star-pattern",
+        "pattern"
+      ],
+      "disabled": false
+    },
+    "stages": [
+      {
+        "title": "Hollow Diamond Pattern",
+        "complexity": "Medium",
+        "statement": "<strong>Scenario: Game UI Rendering</strong><br>You are rendering a retro game interface. Generate a hollow diamond shape using stars and spaces to display an item slot.<br><br><strong>Input:</strong> A single integer n (number of rows for the upper half).<br><br><strong>Output:</strong> The hollow diamond pattern using '*' and spaces.<br><br><strong>Constraints:</strong> 2 <= n <= 100",
+        "samples": [
+          {
+            "input": "3",
+            "output": "  *\n * *\n*   *\n * *\n  *"
+          },
+          {
+            "input": "2",
+            "output": " *\n* *\n *"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "problem": {
+      "title": "Butterfly Pattern",
+      "slug": "butterfly-pattern",
+      "tags": [
+        "star-pattern",
+        "pattern"
+      ],
+      "disabled": false
+    },
+    "stages": [
+      {
+        "title": "Butterfly Pattern",
+        "complexity": "Medium",
+        "statement": "<strong>Scenario: ASCII Art Generator</strong><br>You are creating an ASCII art generation library. Generate a symmetric butterfly pattern of the specified size.<br><br><strong>Input:</strong> A single integer n (number of rows for the upper half).<br><br><strong>Output:</strong> The butterfly pattern using '*' and spaces.<br><br><strong>Constraints:</strong> 2 <= n <= 100",
+        "samples": [
+          {
+            "input": "3",
+            "output": "*    *\n**  **\n******\n**  **\n*    *"
+          },
+          {
+            "input": "2",
+            "output": "*  *\n****\n*  *"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "problem": {
+      "title": "Pascal's Triangle",
+      "slug": "pascals-triangle",
+      "tags": [
+        "math",
+        "pattern"
+      ],
+      "disabled": false
+    },
+    "stages": [
+      {
+        "title": "Pascal's Triangle",
+        "complexity": "Medium",
+        "statement": "<strong>Scenario: Combinatorics Engine</strong><br>You are writing a math engine. Generate Pascal's triangle to easily compute binomial coefficients for a probability simulator.<br><br><strong>Input:</strong> A single integer numRows.<br><br><strong>Output:</strong> Print the first numRows of Pascal's triangle, with each row space-separated.<br><br><strong>Constraints:</strong> 1 <= numRows <= 30",
+        "samples": [
+          {
+            "input": "5",
+            "output": "1\n1 1\n1 2 1\n1 3 3 1\n1 4 6 4 1"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "problem": {
+      "title": "Floyd's Triangle",
+      "slug": "floyds-triangle",
+      "tags": [
+        "pattern"
+      ],
+      "disabled": false
+    },
+    "stages": [
+      {
+        "title": "Floyd's Triangle",
+        "complexity": "Easy",
+        "statement": "<strong>Scenario: Data Packing</strong><br>You are organizing a triangular array of sequential IDs for a data structure. Generate Floyd's triangle.<br><br><strong>Input:</strong> A single integer n (number of rows).<br><br><strong>Output:</strong> Print Floyd's triangle up to n rows, space-separated.<br><br><strong>Constraints:</strong> 1 <= n <= 100",
+        "samples": [
+          {
+            "input": "4",
+            "output": "1\n2 3\n4 5 6\n7 8 9 10"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "problem": {
+      "title": "Number Pyramid",
+      "slug": "number-pyramid",
+      "tags": [
+        "pattern"
+      ],
+      "disabled": false
+    },
+    "stages": [
+      {
+        "title": "Number Pyramid",
+        "complexity": "Medium",
+        "statement": "<strong>Scenario: Display Board</strong><br>Generate a centered number pyramid for a digital scoreboard.<br><br><strong>Input:</strong> A single integer n (number of rows).<br><br><strong>Output:</strong> A centered pyramid of numbers.<br><br><strong>Constraints:</strong> 1 <= n <= 9",
+        "samples": [
+          {
+            "input": "3",
+            "output": "  1\n 1 2\n1 2 3"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "problem": {
+      "title": "Fibonacci Number",
+      "slug": "fibonacci-number",
+      "tags": [
+        "math"
+      ],
+      "disabled": false
+    },
+    "stages": [
+      {
+        "title": "Fibonacci Number",
+        "complexity": "Easy",
+        "statement": "<strong>Scenario: Nature Growth Simulator</strong><br>You are modeling population growth using the Fibonacci sequence. Calculate the Nth number in the sequence.<br><br><strong>Input:</strong> A single integer n.<br><br><strong>Output:</strong> The nth Fibonacci number.<br><br><strong>Constraints:</strong> 0 <= n <= 30",
+        "samples": [
+          {
+            "input": "4",
+            "output": "3"
           }
         ]
       }
