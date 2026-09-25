@@ -113,6 +113,84 @@
   },
   {
     "problem": {
+      "title": "Majority Element",
+      "slug": "majority-element",
+      "tags": [
+        "hash-map"
+      ]
+    },
+    "stages": [
+      {
+        "title": "Majority Element",
+        "complexity": "Easy",
+        "statement": "<strong>Scenario: Voting System</strong><br>You are analyzing election data. Given an array of votes, find the candidate ID that holds the absolute majority.<br><br><strong>Input:</strong> Line 1: integer n.\nLine 2: n space-separated integers.<br><br><strong>Output:</strong> A single integer: the majority element.<br><br><strong>Constraints:</strong> 1 <= n <= 5 * 10^4\n-10^9 <= nums[i] <= 10^9",
+        "samples": [
+          {
+            "input": "3\n3 2 3",
+            "output": "3"
+          },
+          {
+            "input": "7\n2 2 1 1 1 2 2",
+            "output": "2"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "problem": {
+      "title": "Contains Duplicate II",
+      "slug": "contains-duplicate-ii",
+      "tags": [
+        "hash-map"
+      ]
+    },
+    "stages": [
+      {
+        "title": "Contains Duplicate II",
+        "complexity": "Easy",
+        "statement": "<strong>Scenario: Rate Limiting System</strong><br>To prevent spam, you must check if a user has sent the identical message ID twice within a sliding window of `k` seconds.<br><br><strong>Input:</strong> Line 1: integers n and k.\nLine 2: n space-separated integers.<br><br><strong>Output:</strong> true or false<br><br><strong>Constraints:</strong> 1 <= n <= 10^5\n0 <= k <= 10^5",
+        "samples": [
+          {
+            "input": "4 3\n1 2 3 1",
+            "output": "true"
+          },
+          {
+            "input": "6 2\n1 2 3 1 2 3",
+            "output": "false"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "problem": {
+      "title": "Intersection of Two Arrays",
+      "slug": "intersection-of-two-arrays",
+      "tags": [
+        "hash-map"
+      ]
+    },
+    "stages": [
+      {
+        "title": "Intersection of Two Arrays",
+        "complexity": "Easy",
+        "statement": "<strong>Scenario: Mutual Friends</strong><br>You are building a social network feature. Given the friend lists of two users, find the IDs of all mutual friends.<br><br><strong>Input:</strong> Line 1: integer n.\nLine 2: n space-separated integers.\nLine 3: integer m.\nLine 4: m space-separated integers.<br><br><strong>Output:</strong> Space-separated unique integers present in both arrays.<br><br><strong>Constraints:</strong> 1 <= n, m <= 1000",
+        "samples": [
+          {
+            "input": "4\n1 2 2 1\n2\n2 2",
+            "output": "2"
+          },
+          {
+            "input": "3\n4 9 5\n5\n9 4 9 8 4",
+            "output": "4 9"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "problem": {
       "title": "Valid Palindrome",
       "slug": "valid-palindrome",
       "tags": [
@@ -246,6 +324,84 @@
           {
             "input": "6\n4 2 0 3 2 5",
             "output": "9"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "problem": {
+      "title": "Move Zeroes",
+      "slug": "move-zeroes",
+      "tags": [
+        "two-pointers"
+      ]
+    },
+    "stages": [
+      {
+        "title": "Move Zeroes",
+        "complexity": "Easy",
+        "statement": "<strong>Scenario: Disk Defragmentation</strong><br>A storage disk represents empty blocks as 0. Shift all valid data to the front of the disk to create one contiguous block of free space at the end.<br><br><strong>Input:</strong> Line 1: integer n.\nLine 2: n space-separated integers.<br><br><strong>Output:</strong> n space-separated integers with zeroes at the end.<br><br><strong>Constraints:</strong> 1 <= n <= 10^4<br><br><strong>Optimization Scenarios (Two Pointers):</strong><ul><li>Try to solve this using strictly O(1) auxiliary space (in-place).</li><li>Optimize your approach to run in a single pass (O(N) time complexity) without nested loops.</li></ul>",
+        "samples": [
+          {
+            "input": "5\n0 1 0 3 12",
+            "output": "1 3 12 0 0"
+          },
+          {
+            "input": "1\n0",
+            "output": "0"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "problem": {
+      "title": "Remove Element",
+      "slug": "remove-element",
+      "tags": [
+        "two-pointers"
+      ]
+    },
+    "stages": [
+      {
+        "title": "Remove Element",
+        "complexity": "Easy",
+        "statement": "<strong>Scenario: Content Moderation</strong><br>A cache block contains an array of user IDs. You must filter out all users who match a flagged ID in-place to save memory.<br><br><strong>Input:</strong> Line 1: integer n and val.\nLine 2: n space-separated integers.<br><br><strong>Output:</strong> Space-separated integers remaining after removing val.<br><br><strong>Constraints:</strong> 0 <= n <= 100\n0 <= val <= 100<br><br><strong>Optimization Scenarios (Two Pointers):</strong><ul><li>Try to solve this using strictly O(1) auxiliary space (in-place).</li><li>Optimize your approach to run in a single pass (O(N) time complexity) without nested loops.</li></ul>",
+        "samples": [
+          {
+            "input": "4 3\n3 2 2 3",
+            "output": "2 2"
+          },
+          {
+            "input": "5 2\n0 1 2 2 3",
+            "output": "0 1 3"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "problem": {
+      "title": "Two Sum II",
+      "slug": "two-sum-ii",
+      "tags": [
+        "two-pointers"
+      ]
+    },
+    "stages": [
+      {
+        "title": "Two Sum II",
+        "complexity": "Medium",
+        "statement": "<strong>Scenario: Ledger Reconciliation</strong><br>You have a chronologically sorted array of transaction amounts. Find two transactions that exactly offset a known discrepancy target.<br><br><strong>Input:</strong> Line 1: integer n.\nLine 2: n space-separated integers sorted ascending.\nLine 3: integer target.<br><br><strong>Output:</strong> Two space-separated 1-indexed positions.<br><br><strong>Constraints:</strong> 2 <= n <= 3 * 10^4<br><br><strong>Optimization Scenarios (Two Pointers):</strong><ul><li>Try to solve this using strictly O(1) auxiliary space (in-place).</li><li>Optimize your approach to run in a single pass (O(N) time complexity) without nested loops.</li></ul>",
+        "samples": [
+          {
+            "input": "4\n2 7 11 15\n9",
+            "output": "1 2"
+          },
+          {
+            "input": "3\n2 3 4\n6",
+            "output": "1 3"
           }
         ]
       }
